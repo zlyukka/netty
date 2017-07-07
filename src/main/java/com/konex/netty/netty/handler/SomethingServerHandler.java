@@ -16,7 +16,10 @@
 package com.konex.netty.netty.handler;
 
 
+import com.konex.netty.entity.User;
 import com.konex.netty.netty.ChannelRepository;
+import com.konex.netty.service.NettyServices;
+import com.konex.netty.service.UserService;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -38,6 +41,12 @@ import java.util.HashMap;
 @Qualifier("somethingServerHandler")
 @ChannelHandler.Sharable
 public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    NettyServices nettyServices;
 
     @Autowired
     private ChannelRepository channelRepository;
@@ -68,7 +77,15 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
 
         if ( splitMessage.length != 2 ) {
             for(Channel chenel : channelRepository.getAllchannelCache().values()) {
-                chenel.writeAndFlush(ctx.channel().remoteAddress().toString()+" :"+stringMessage + "\n\r");
+                User user=null;//userService.getUserById(Long.valueOf(stringMessage));
+                nettyServices.takeObject(msg);
+                if(user!=null){
+                    System.out.println(user.getUserPIB());
+                    chenel.writeAndFlush(ctx.channel().remoteAddress().toString()+" :"+stringMessage+" "+user.getUserPIB()+"\n\r");
+                }else{
+                    chenel.writeAndFlush(ctx.channel().remoteAddress().toString()+" :"+stringMessage+" "+"\n\r");
+                }
+
             }
             //ctx.channel().writeAndFlush("Server :"+stringMessage + "\n\r");
             return;
