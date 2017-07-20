@@ -20,6 +20,7 @@ import com.konex.netty.entity.User;
 import com.konex.netty.netty.ChannelRepository;
 import com.konex.netty.service.NettyServices;
 import com.konex.netty.service.UserService;
+import com.konex.netty.service.workingWithFiles.WorkingWithFiles;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -43,13 +44,16 @@ import java.util.HashMap;
 public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    NettyServices nettyServices;
+    private NettyServices nettyServices;
 
     @Autowired
     private ChannelRepository channelRepository;
+
+    @Autowired
+    private WorkingWithFiles workingWithFiles;
 
     private static Logger logger = Logger.getLogger(SomethingServerHandler.class.getName());
 
@@ -84,6 +88,11 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
                     chenel.writeAndFlush(ctx.channel().remoteAddress().toString()+" :"+stringMessage+" "+user.getUserPIB()+"\n\r");
                 }else{
                     chenel.writeAndFlush(ctx.channel().remoteAddress().toString()+" :"+stringMessage+" "+"\n\r");
+                    if (stringMessage.equals("read")){
+                        workingWithFiles.getFileContent("fn");
+                    }else{
+                        workingWithFiles.writeFile(stringMessage);
+                    }
                 }
 
             }
