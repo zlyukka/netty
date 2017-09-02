@@ -45,6 +45,7 @@ public class SomethingChannelInitializer extends ChannelInitializer<SocketChanne
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
+        System.out.println("new Channel"+socketChannel.localAddress());
         ChannelPipeline pipeline = socketChannel.pipeline();
 
         // Add the text line codec combination first,

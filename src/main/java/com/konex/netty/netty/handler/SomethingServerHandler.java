@@ -65,10 +65,11 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
         logger.debug(ctx.channel().remoteAddress());
         String channelKey = ctx.channel().remoteAddress().toString();
         channelRepository.put(channelKey, ctx.channel());
-
-        ctx.writeAndFlush("Your channel key is " + channelKey + "\n\r");
+        System.out.println("Your channel key is " + channelKey + "\n\r");
+        //ctx.writeAndFlush("Your channel key is " + channelKey + "\n\r");
 
         logger.debug("Binded Channel Count is " + this.channelRepository.size());
+        ctx.channel().writeAndFlush("test");
     }
 
     @Override
@@ -88,11 +89,11 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
                     chenel.writeAndFlush(ctx.channel().remoteAddress().toString()+" :"+stringMessage+" "+user.getUserPIB()+"\n\r");
                 }else{
                     chenel.writeAndFlush(ctx.channel().remoteAddress().toString()+" :"+stringMessage+" "+"\n\r");
-                    if (stringMessage.equals("read")){
-                        workingWithFiles.getFileContent("fn");
-                    }else{
-                        workingWithFiles.writeFile(stringMessage);
-                    }
+//                    if (stringMessage.equals("read")){
+//                        workingWithFiles.getFileContent("fn");
+//                    }else{
+//                        workingWithFiles.writeFile(stringMessage);
+//                    }
                 }
 
             }
