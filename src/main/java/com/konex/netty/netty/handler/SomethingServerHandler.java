@@ -58,6 +58,12 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
     private static Logger logger = Logger.getLogger(SomethingServerHandler.class.getName());
 
     @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        System.out.println(ctx.channel().remoteAddress().toString()+" пользователь отчалил");
+        ctx.fireChannelUnregistered();
+    }
+
+    @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         Assert.notNull(this.channelRepository, "[Assertion failed] - ChannelRepository is required; it must not be null");
 
